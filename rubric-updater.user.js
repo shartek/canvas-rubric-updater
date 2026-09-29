@@ -5,7 +5,7 @@
 // @description  Update non-outcome rubric rating titles to Expected / Acceptable / Developing / Beginning
 // @match        https://uwoms.instructure.com/courses/*/rubrics/*
 // @match        https://earlyedu.instructure.com/courses/*/rubrics/*
-// @version      1.1.2
+// @version      1.1.3
 // @updateURL    https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @downloadURL  https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @grant        none
@@ -148,16 +148,46 @@ console.log('Detected courseId:', courseId);
 console.log('Detected rubricId:', rubricId);
 console.log('Fetch URL:', '/api/v1/courses/' + courseId + '/rubrics/' + rubricId);
 
-    fetchRubric()
-      .then(updateRubricTitles)
-      .then(saveRubric)
-      .then(function () {
-        window.location.reload(true);
-      })
-      .catch(function (err) {
-        console.error(err);
-        window.alert('Rubric update failed: ' + err.message);
+fetchRubric()
+  .then(function (rubric) {
+
+    // ⭐ Dump the raw JSON Canvas returned
+    console.log('Raw rubric JSON:', rubric);
+
+    // ⭐ Try to extract criteria, but log before failing
+    try {
+      var criteria = extractCriteria(rubric);
+
+      // ⭐ Dump each criterion + rating description
+      console.log('Criteria dump:');
+      criteria.forEach(function (criterion, idx) {
+        console.log('Criterion', idx, 'description:', criterion.description);
+
+        if (criterion.ratings) {
+          criterion.ratings.forEach(function (rating, rIdx) {
+            console.log('  Rating', rIdx, 'title:', rating.description);
+          });
+        }
       });
+
+      // Continue with update
+      return updateRubricTitles(rubric);
+
+    } catch (err) {
+      console.error('Criteria extraction failed:', err);
+      throw err; // rethrow so your alert still fires
+    }
+
+  })
+  .then(saveRubric)
+  .then(function () {
+    window.location.reload(true);
+  })
+  .catch(function (err) {
+    console.error(err);
+    window.alert('Rubric update failed: ' + err.message);
+  });
+
   }
 
   // --- INIT ---
