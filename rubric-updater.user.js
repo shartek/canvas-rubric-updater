@@ -1,4 +1,4 @@
-// ==UserScript==
+  // ==UserScript==
 // @name         Rubric Updater
 // @namespace    https://github.com/shartek/canvas-rubric-updater
 // @author       shartek
@@ -130,10 +130,19 @@
 
   // --- MAIN WORKFLOW ---
   function runUpdate() {
-    if (!window.confirm('Update all non-outcome rating titles to: ' +
-      ratingTitles.join(' / ') + ' ?')) {
+    var rubricTitle = document.querySelector('.rubric_title')?.innerText || 'Unknown rubric';
+
+    if (!window.confirm(
+      'Rubric: ' + rubricTitle +
+      '\n\nUpdate all non-outcome rating titles to:\n' +
+      ratingTitles.join(' / ')
+    )) {
       return;
     }
+
+console.log('Detected courseId:', courseId);
+console.log('Detected rubricId:', rubricId);
+console.log('Fetch URL:', '/api/v1/courses/' + courseId + '/rubrics/' + rubricId);
 
     fetchRubric()
       .then(updateRubricTitles)
