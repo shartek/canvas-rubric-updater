@@ -2,12 +2,19 @@
 
 A Tampermonkey userscript that updates Canvas rubric rating titles to the EarlyEdU standard.
 
-👉 **Install the script:**  
-https://github.com/shartek/canvas-rubric-updater/raw/main/rubric-updater.user.js
-
 This tool is designed for instructors and course designers who maintain multiple rubrics across Canvas courses and want a fast, safe way to update legacy rating labels (Accomplished, Satisfactory, Excellent, etc.) to the current EarlyEdU feedback-forward standard:
 
 **Expected · Acceptable · Developing · Beginning**
+
+---
+
+## 📦 Installation
+
+1. Install Tampermonkey browser extension  
+2. Click the link to install the script:  
+  👉 [Install from GitHub](https://github.com/shartek/canvas-rubric-updater/raw/main/rubric-updater.user.js)  
+3. Accept the Tampermonkey prompt to add the script
+
 
 ---
 
