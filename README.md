@@ -65,6 +65,7 @@ Inside the script, you’ll find:
 
 ```javascript
 var ratingTitles = ['Expected', 'Acceptable', 'Developing', 'Beginning'];
+```
 
 ## 🛡️ Safety Notes
 
