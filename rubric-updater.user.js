@@ -1,27 +1,24 @@
 // ==UserScript==
 // @name         Rubric Updater
 // @namespace    https://github.com/shartek/canvas-rubric-updater
-// @author       Shar ⭐
+// @author       shartek
 // @description  Update non-outcome rubric rating titles to Expected / Acceptable / Developing / Beginning
 // @match        https://uwoms.instructure.com/courses/*/rubrics/*
 // @match        https://earlyedu.instructure.com/courses/*/rubrics/*
-// @version      1.0.0
+// @version      1.1.0
 // @updateURL    https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @downloadURL  https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @grant        none
 // ==/UserScript==
 
-
 (function () {
   'use strict';
 
   // --- CONFIGURABLE TITLES ---
-  // You can change these later if the wording ever changes.
   var ratingTitles = ['Expected', 'Acceptable', 'Developing', 'Beginning'];
 
   // --- ONLY RUN ON RUBRIC PAGES ---
   var path = window.location.pathname;
-  // Expect: /courses/:course_id/rubrics/:rubric_id
   var parts = path.split('/').filter(Boolean);
   if (parts.length < 4 || parts[0] !== 'courses' || parts[2] !== 'rubrics') {
     return;
@@ -29,12 +26,11 @@
   var courseId = parts[1];
   var rubricId = parts[3];
 
-  // --- ADD BUTTON UNDER EDIT / DELETE ---
+  // --- ADD BUTTON ---
   function addUpdateButton() {
     var container = document.getElementById('rubric-action-buttons');
     if (!container) return;
 
-    // Avoid duplicate button
     if (document.getElementById('rubric-update-titles')) return;
 
     var btn = document.createElement('a');
@@ -51,7 +47,7 @@
     container.appendChild(btn);
   }
 
-  // --- CSRF TOKEN (same pattern as James’ importer) ---
+  // --- CSRF TOKEN ---
   function getCsrfToken() {
     var csrfRegex = /^_csrf_token=(.*)$/;
     var cookies = document.cookie.split(';');
@@ -78,18 +74,29 @@
     });
   }
 
-  // --- UPDATE TITLES IN RUBRIC OBJECT ---
-  function updateRubricTitles(rubric) {
-    if (!rubric || !Array.isArray(rubric.criteria)) {
-      throw new Error('Rubric has no criteria array.');
+  // --- DETECT RUBRIC FORMAT ---
+  function extractCriteria(rubric) {
+    // Format A: classic rubric
+    if (Array.isArray(rubric.criteria)) {
+      return rubric.criteria;
     }
 
-    rubric.criteria.forEach(function (criterion) {
-      // Skip outcome-linked criteria
+    // Format B: association-style rubric
+    if (rubric.rubric && Array.isArray(rubric.rubric.criteria)) {
+      return rubric.rubric.criteria;
+    }
+
+    throw new Error('Rubric has no criteria array');
+  }
+
+  // --- UPDATE TITLES ---
+  function updateRubricTitles(rubric) {
+    var criteria = extractCriteria(rubric);
+
+    criteria.forEach(function (criterion) {
       if (criterion.learning_outcome_id) return;
       if (!Array.isArray(criterion.ratings)) return;
 
-      // Replace rating descriptions with our standard titles
       for (var i = 0; i < criterion.ratings.length && i < ratingTitles.length; i++) {
         criterion.ratings[i].description = ratingTitles[i];
       }
@@ -98,7 +105,7 @@
     return rubric;
   }
 
-  // --- SAVE UPDATED RUBRIC BACK TO CANVAS ---
+  // --- SAVE RUBRIC ---
   function saveRubric(rubric) {
     var token = getCsrfToken();
     if (!token) {
@@ -123,7 +130,6 @@
 
   // --- MAIN WORKFLOW ---
   function runUpdate() {
-    // Simple confirm so you know you’re touching this rubric
     if (!window.confirm('Update all non-outcome rating titles to: ' +
       ratingTitles.join(' / ') + ' ?')) {
       return;
@@ -133,7 +139,6 @@
       .then(updateRubricTitles)
       .then(saveRubric)
       .then(function () {
-        // Reload so you can immediately verify the change
         window.location.reload(true);
       })
       .catch(function (err) {
