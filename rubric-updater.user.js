@@ -5,7 +5,7 @@
 // @description  Update non-outcome rubric rating titles to Expected / Acceptable / Developing / Beginning
 // @match        https://uwoms.instructure.com/courses/*/rubrics/*
 // @match        https://earlyedu.instructure.com/courses/*/rubrics/*
-// @version      1.1.0
+// @version      1.1.1
 // @updateURL    https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @downloadURL  https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @grant        none
