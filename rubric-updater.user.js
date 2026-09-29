@@ -5,7 +5,7 @@
 // @description  Update non-outcome rubric rating titles to Expected / Acceptable / Developing / Beginning
 // @match        https://uwoms.instructure.com/courses/*/rubrics/*
 // @match        https://earlyedu.instructure.com/courses/*/rubrics/*
-// @version      1.1.1
+// @version      1.1.2
 // @updateURL    https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @downloadURL  https://raw.githubusercontent.com/shartek/canvas-rubric-updater/main/rubric-updater.user.js
 // @grant        none
@@ -62,17 +62,21 @@
   }
 
   // --- FETCH RUBRIC JSON ---
-  function fetchRubric() {
-    return fetch('/api/v1/courses/' + courseId + '/rubrics/' + rubricId, {
-      method: 'GET',
-      credentials: 'same-origin'
-    }).then(function (res) {
-      if (!res.ok) {
-        throw new Error('Failed to fetch rubric: ' + res.status);
-      }
-      return res.json();
-    });
-  }
+function fetchRubric() {
+  return fetch('/api/v1/courses/' + courseId + '/rubrics/' + rubricId, {
+    method: 'GET',
+    credentials: 'same-origin',
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(function (res) {
+    if (!res.ok) {
+      throw new Error('Failed to fetch rubric: ' + res.status);
+    }
+    return res.json();
+  });
+}
+
 
   // --- DETECT RUBRIC FORMAT ---
   function extractCriteria(rubric) {
