@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Rubric Updater
 // @namespace    https://github.com/shartek/canvas-rubric-updater
+// @author       Shar ⭐
 // @description  Update non-outcome rubric rating titles to Expected / Acceptable / Developing / Beginning
 // @match        https://uwoms.instructure.com/courses/*/rubrics/*
 // @match        https://earlyedu.instructure.com/courses/*/rubrics/*
