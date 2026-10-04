@@ -8,7 +8,7 @@ This tool is designed for instructors and course designers who maintain multiple
 
 ---
 
-## 📦 Installation
+## 🚀 Installation (Tampermonkey)
 
 1. Install Tampermonkey browser extension  
 2. Click the link to install the script:  
@@ -38,31 +38,10 @@ This allows you to update rubrics quickly without manually editing each rating t
 
 ## 🧠 Why This Exists
 
-EarlyEdU rubrics have evolved over time, and many older courses still contain rating labels such as:
-
-- Accomplished  
-- Satisfactory  
-- Excellent  
-- Complete  
-- Incomplete  
-
-These labels no longer match the current feedback-forward model.
-
-Updating them manually is tedious and error-prone — especially across dozens of rubrics.
+Manually updating rubic titles is tedious and error-prone — especially across dozens of rubrics.
 
 This script automates the repetitive part while keeping you in control of each rubric.  
 You still open the rubric and verify the update, but you no longer have to click-click-paste-click-click for every criterion.
-
----
-
-## 🚀 Installation (Tampermonkey)
-
-1. Install the Tampermonkey browser extension (Chrome, Edge, Firefox).
-2. Click **Add new script**.
-3. Paste the contents of `rubric-updater.user.js` into the editor.
-4. Save.
-5. Navigate to any Canvas rubric page:
-6. Look for the **Update Titles** button under the Edit/Delete buttons.
 
 ---
 
@@ -93,6 +72,14 @@ You are free to use, modify, and distribute this script with attribution.
 ---
 
 ## 🧾 Changelog
+
+### **v3.0.0 — Indexed‑Hash PUT Update**
+- Updated rubric serialization to use Canvas’s required **indexed‑hash** format for criteria and ratings.
+- Improved rubric extraction to support both standalone rubrics and assignment‑embedded rubric structures.
+- Added stable **course‑level rubric_association** for PUT requests (no assignment ID needed).
+- Cleaned composite criterion IDs (e.g., `"2590_5399"` → `"5399"`) for PUT compatibility.
+- Added **minimal console logging** at key checkpoints (fetching rubric, updating titles, sending PUT).
+- Script now reliably updates rubrics whether attached or unattached.
 
 ### **v1.0.0 — Initial Release**
 - Added Tampermonkey userscript for updating Canvas rubric rating titles.  
